@@ -1,0 +1,51 @@
+name: Daily maintenance
+
+# 23:13 WIB daily: keep the Instagram token alive (it expires after 60 days
+# unless refreshed) and record likes/comments so the agent learns your best times.
+on:
+  schedule:
+    - cron: "13 16 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repo-writes
+  cancel-in-progress: false
+
+jobs:
+  maintain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Instagram connection
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+        run: python3 scripts/publish.py --check
+
+      - name: Refresh Instagram token
+        continue-on-error: true   # a token must be 24h old before it can be refreshed
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          python3 scripts/publish.py --refresh-token "$RUNNER_TEMP/tok"
+          echo "::add-mask::$(cat "$RUNNER_TEMP/tok")"
+          gh secret set IG_ACCESS_TOKEN --repo "$GITHUB_REPOSITORY" < "$RUNNER_TEMP/tok"
+          rm -f "$RUNNER_TEMP/tok"
+
+      - name: Update post stats
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+        run: python3 scripts/publish.py --stats
+
+      - name: Save stats to repo
+        run: |
+          git config user.name "ig-publisher-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && exit 0
+          git commit -q -m "Maintenance: update post stats"
+          for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done

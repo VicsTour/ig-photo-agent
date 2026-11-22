@@ -1,0 +1,48 @@
+name: Publish to Instagram
+
+# Every 15 minutes: if a queued post's publish_at has passed, post it.
+# GitHub may start scheduled runs a few minutes late; that's normal.
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repo-writes
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Anything due?
+        id: check
+        run: |
+          python3 - <<'EOF' >> "$GITHUB_OUTPUT"
+          import glob, json, datetime as dt
+          now = dt.datetime.now(dt.timezone.utc)
+          due = any(dt.datetime.fromisoformat(json.load(open(p))["publish_at"]) <= now
+                    for p in glob.glob("queue/*/post.json"))
+          print(f"due={'true' if due else 'false'}")
+          EOF
+
+      - name: Publish
+        if: steps.check.outputs.due == 'true'
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+        run: python3 scripts/publish.py
+
+      - name: Save result to repo
+        if: always() && steps.check.outputs.due == 'true'
+        run: |
+          git config user.name "ig-publisher-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && exit 0
+          git commit -q -m "Publisher: update queue and log"
+          for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done
