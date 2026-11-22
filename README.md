@@ -13,5 +13,5 @@ Lightroom ──export──▶ inbox/ ──Claude (scheduled task)──▶ pr
 ```
 
 - Agent instructions: `CLAUDE.md` · My voice and posting times: `config/profile.md`
-- Secrets (GitHub → Settings → Secrets → Actions): `IG_ACCESS_TOKEN`, `GH_PAT`
+- Secrets (GitHub → Settings → Secrets → Actions): `IG_VICSTOUR` (Meta EAA token)
 - Nothing secret is stored in this repo. Public copies of photos have all metadata (incl. GPS) stripped.

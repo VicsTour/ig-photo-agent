@@ -34,7 +34,7 @@ jobs:
       - name: Publish
         if: steps.check.outputs.due == 'true'
         env:
-          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_VICSTOUR }}
           IG_USER_ID: "17841400521149190"
         run: python3 scripts/publish.py
 
