@@ -1,29 +1,37 @@
 # Account profile — edit freely (or ask Claude to update it)
 
 ## Who I am on Instagram
-- Handle: @YOUR_HANDLE
-- Photography I shoot most: <e.g. street, landscape, travel, food, portraits>
-- Based in: <city>, Indonesia
-- Gear I usually use: <camera body / favourite lenses>
+- Handle: @vicstour
+- Photography: varied — street, landscape, travel, and close-up details (leaves, textures, small things people pass by)
+- Location: take it from the Lightroom Title/Caption note or the photo itself; never guess a place
+- Cameras: iPhone 17 Pro, Google Pixel 8, Nikon Df
 
-## Voice
-- Language: <e.g. English first line + short Bahasa Indonesia line / English only / Bahasa only>
-- Tone: <e.g. calm and observational, a bit witty, no hard selling>
-- Emoji: <e.g. max 1–2, or none>
-- Things I never want in captions: <e.g. "link in bio", motivational quotes, too many exclamation marks>
+## Voice (captions are written in Bahasa Indonesia)
+- Register: formal-santai. Tidy structure, elegant word choice; not stiff like an academic journal, no excessive slang.
+- Structure of every caption:
+  1. **Open with a concrete visual observation** from the photo (light, texture, colour, a small detail). This is also the hook (line 1, under 125 characters).
+  2. **Draw a thread to a philosophical meaning or a reflection** on life, the mind, or the heart. 1–3 short sentences.
+  3. **Close with a light, down-to-earth line** (ringan dan membumi), e.g. a small everyday remark.
+- Avoid:
+  - Motivational clichés.
+  - A lecturing tone: no "kita harus…", "jangan pernah…", no telling the reader what to do.
+  - Small-talk openers ("Halo semua", "Selamat sore teman-teman", "Hari ini aku…").
+- Emoji: none in the caption body; only 📷 on the gear line.
+- Gear line format: `📷 Nikon Df · 50mm · f/1.8 · 1/500s · ISO 200` (for phones: `📷 iPhone 17 Pro · 24mm · f/1.8 · 1/120s · ISO 64`).
 
 ## Posting rhythm
-- Target: 1 post every 1–2 days (3–4 per week)
+- Target: 1 post every 1–2 days (4 per week)
 - Preferred windows (WIB):
   - Weekdays: 19:00–21:00 (main), 12:00–13:00 (backup)
   - Weekends: 09:00–11:00 or 19:00–20:30
-- Avoid: <e.g. Friday 11:30–13:00>
 
-## Hashtag pool (Claude picks max 5 per post from here + photo-specific ones)
-- Personal/series tag: #<yourname>photography
-- Community: #streetphotography_id #indonesiaphotography #landscape_indonesia
-- Local: #jakarta #bogor #indonesia
-- Gear (only if it fits): #fujifilm_xseries #sonyalpha
+## Hashtag pool (Claude picks 3–5 per post, max 5, all must fit the photo)
+- Topic (pick 1 that matches): #streetphotography #landscapephotography #travelphotography #macrophotography #detailsphotography
+- Community / Indonesia: #fotografiindonesia #indonesia_photography #streetphotography_id #landscape_indonesia
+- Gear (only when it fits the photo): #nikondf #shotoniphone #teampixel
+- Local: city or region from the Lightroom note, e.g. #jakarta #bogor #yogyakarta
+- Personal series tag: #vicstour
 
 ## Notes for Claude
-- If the Lightroom Title/Caption has a note, build the story around it.
+- If the Lightroom Title/Caption has a note, build the observation and story around it.
+- Keep captions to roughly 3–6 short lines plus the gear line and hashtags.
