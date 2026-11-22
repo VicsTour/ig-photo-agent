@@ -1,7 +1,7 @@
 name: Daily maintenance
 
-# 23:13 WIB daily: keep the Instagram token alive (it expires after 60 days
-# unless refreshed) and record likes/comments so the agent learns your best times.
+# 23:13 WIB daily: check the Instagram connection and record likes/comments
+# so the agent learns your best times. (The Meta system-user token never expires.)
 on:
   schedule:
     - cron: "13 16 * * *"
@@ -23,22 +23,13 @@ jobs:
       - name: Check Instagram connection
         env:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: "17841400521149190"
         run: python3 scripts/publish.py --check
-
-      - name: Refresh Instagram token
-        continue-on-error: true   # a token must be 24h old before it can be refreshed
-        env:
-          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
-          GH_TOKEN: ${{ secrets.GH_PAT }}
-        run: |
-          python3 scripts/publish.py --refresh-token "$RUNNER_TEMP/tok"
-          echo "::add-mask::$(cat "$RUNNER_TEMP/tok")"
-          gh secret set IG_ACCESS_TOKEN --repo "$GITHUB_REPOSITORY" < "$RUNNER_TEMP/tok"
-          rm -f "$RUNNER_TEMP/tok"
 
       - name: Update post stats
         env:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: "17841400521149190"
         run: python3 scripts/publish.py --stats
 
       - name: Save stats to repo

@@ -7,7 +7,8 @@
   python scripts/publish.py --dry-run       show what would be published, call nothing
   python scripts/publish.py --check         confirm the token works and show the account
 
-Needs env IG_ACCESS_TOKEN (GitHub secret). Uses only the Python standard library.
+Needs env IG_ACCESS_TOKEN (GitHub secret, a Meta "EAA..." system-user token that never expires)
+and IG_USER_ID (the Instagram account ID shown in the Meta app). Standard library only.
 """
 import csv
 import datetime as dt
@@ -21,8 +22,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-API = "https://graph.instagram.com"
-VERSION = os.environ.get("IG_API_VERSION", "").strip("/")
+API = "https://" + os.environ.get("IG_API_HOST", "graph.facebook.com")
+VERSION = os.environ.get("IG_API_VERSION", "v25.0").strip("/")
 BASE = f"{API}/{VERSION}" if VERSION else API
 LOG = "log/posts.csv"
 LOG_FIELDS = ["slug", "publish_at", "posted_at", "weekday", "hour_local", "media_id", "permalink",
@@ -121,8 +122,8 @@ def run_publish(dry_run=False):
     if dry_run:
         print(json.dumps({"would_publish": post["slug"], "image_url": image_url, "caption": post["caption"]}, indent=2, ensure_ascii=False))
         return
-    me = call("GET", "me", {"fields": "user_id,username"})
-    ig_id = me.get("user_id") or me["id"]
+    ig_id = os.environ["IG_USER_ID"]
+    me = call("GET", ig_id, {"fields": "username"})
     try:
         media_id, permalink = publish_one(post, ig_id, image_url)
     except Exception as e:
@@ -167,7 +168,8 @@ def run_stats(days=30):
 
 
 def run_refresh(outfile):
-    r = call("GET", "refresh_access_token", {"grant_type": "ig_refresh_token"}, base=API)
+    """Only for Instagram-login tokens (start with IG). Meta system-user tokens (EAA) never expire."""
+    r = call("GET", "refresh_access_token", {"grant_type": "ig_refresh_token"}, base="https://graph.instagram.com")
     with open(outfile, "w") as f:
         f.write(r["access_token"])
     print(f"token refreshed, valid for {int(r.get('expires_in', 0)) // 86400} days")
@@ -176,8 +178,8 @@ def run_refresh(outfile):
 if __name__ == "__main__":
     args = sys.argv[1:]
     if "--check" in args:
-        me = call("GET", "me", {"fields": "user_id,username,account_type"})
-        print(f"connected as @{me.get('username')} ({me.get('account_type', 'professional')})")
+        me = call("GET", os.environ["IG_USER_ID"], {"fields": "username,media_count"})
+        print(f"connected as @{me.get('username')} ({me.get('media_count')} posts)")
     elif "--stats" in args:
         run_stats()
     elif "--refresh-token" in args:
