@@ -95,7 +95,20 @@ def read(path):
     else:
         info["instagram_fit"] = "ok"
 
-    parts = [info["camera"], info["lens"], info["focal_length"], info["aperture"],
+    # tidy camera name: "NIKON CORPORATION NIKON Df" -> "Nikon Df", "Apple iPhone 17 Pro" -> "iPhone 17 Pro"
+    make = str(exif.get(271, "")).strip()
+    model = str(exif.get(272, "")).strip()
+    brand = make.split()[0] if make else ""
+    if model.upper().startswith(brand.upper()) and brand:
+        model = model[len(brand):].strip()
+    nice_brand = {"NIKON": "Nikon", "CANON": "Canon", "FUJIFILM": "Fujifilm", "SONY": "Sony",
+                  "Apple": "", "Google": "Google", "OLYMPUS": "Olympus", "PANASONIC": "Panasonic"}.get(brand, brand.title())
+    info["camera_short"] = " ".join(x for x in [nice_brand, model] if x) or None
+    # a lens field like "50.0 mm f/1.8" only repeats focal length; keep real lens names
+    lens_name = info["lens"]
+    if lens_name and re.fullmatch(r"[\d.]+\s*mm\s*f/[\d.]+", lens_name):
+        lens_name = None
+    parts = [info["camera_short"], lens_name, info["focal_length"], info["aperture"],
              info["shutter"], f"ISO {info['iso']}" if info["iso"] else None]
     info["gear_line"] = " · ".join(p for p in parts if p)
     return info
