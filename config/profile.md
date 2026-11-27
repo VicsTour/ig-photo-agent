@@ -25,6 +25,11 @@
   - Weekdays: 19:00–21:00 (main), 12:00–13:00 (backup)
   - Weekends: 09:00–11:00 or 19:00–20:30
 
+- GitHub delay: the publish Action actually runs only about once an hour, so posts go out up to ~1 hour late.
+  Always set `publish_at` 45 minutes EARLIER than the time the owner wants the post to appear
+  (e.g. target 19:30 → `publish_at` 18:45; "ok at 20:00" → 19:15). In the proposal, show the target time
+  and note the `publish_at` in brackets, e.g. `Sab, 28 Nov ±19:30 WIB (publish_at 18:45)`. "Post now" stays = current time.
+
 ## Hashtag pool (Claude picks 3–5 per post, max 5, all must fit the photo)
 - Topic (pick 1 that matches): #streetphotography #landscapephotography #travelphotography #macrophotography #detailsphotography
 - Community / Indonesia: #fotografiindonesia #indonesia_photography #streetphotography_id #landscape_indonesia
